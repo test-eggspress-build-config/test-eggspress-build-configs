@@ -1,4 +1,4 @@
-// react-chartjs-2, chart.js
+// react-chartjs-2, chart.js, csvtojson
 
 import ComboBarLine from './Chart/ComboBarLine'
 import Scatter from './Chart/Scatter'
