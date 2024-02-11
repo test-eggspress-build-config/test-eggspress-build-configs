@@ -34,6 +34,10 @@ relatedPost8: ""
 relatedPost9: ""
 ---
 
+1. Testing out code in ordered list `testing`
+
+- Testing out code in unordered list `testing`
+
 <Chart filename="us_emissions_econ.csv" type="combo" title="United States CO2 Emissions and GDP" xLabel="Year" primaryYLabel="GDP" secondaryYMin="4000" secondaryYLabel="CO2 Emissions" primaryYPrefix="$" primaryYSuffix="T" secondaryYSuffix=" kt" palette="Paired12">
 **Figure 1.** The relationship between GDP (Gross Domestic Product) and CO2 emissions in the USA is complex and multifaceted. Historically, there has been a strong correlation between economic growth and CO2 emissions, as economic activity often relies heavily on the consumption of fossil fuels, which release CO2 when burned. However, this relationship has been changing due to various factors including technological advancements, policy interventions, and changes in consumer behavior.
 </Chart>
