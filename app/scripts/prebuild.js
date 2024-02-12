@@ -398,7 +398,9 @@ const importUserComponents = async () => {
             })
           }
         }
+
         fs.copySync(file.source, file.destination)
+        
         if (fs.existsSync(`my_components/${file.name}`)) {
           try {
             fs.copySync(`my_components/${file.name}`, `${destinationPath}/${file.name}`)
@@ -406,8 +408,8 @@ const importUserComponents = async () => {
         }
       } else {
         fs.writeFileSync(
-          `${destinationPath}/${file.name}`,
-          `const ${file.name} = () => {return <></>}\nexport default ${file.name}`
+          `${destinationPath}/${filename}`,
+          `const ${file.name} = () => {return <></>}\n\nexport default ${file.name}`
         )
       }
     })).then(() => {
