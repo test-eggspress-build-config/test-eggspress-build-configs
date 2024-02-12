@@ -357,6 +357,8 @@ const importUserComponents = async () => {
   
     const filesInComponentFolder = await glob('my_components/*')
     const destinationPath = `app/_components/UserComponents`
+
+    fs.mkdirSync(destinationPath, {recursive: true})
   
     const componentFiles = filesInComponentFolder.filter(
       x => (x[x.lastIndexOf('/') + 1] === x[x.lastIndexOf('/') + 1].toUpperCase() || x[x.lastIndexOf('/') + 1] === '#')
