@@ -414,8 +414,8 @@ const importUserComponents = async () => {
         }
       } else {
         fs.writeFileSync(
-          `${destinationPath}/${file.name}.tsx`,
-          `const ${file.name} = () => {return <></>}\n\nexport default ${file.name}`
+          `${destinationPath}/${filename.slice(1)}`,
+          `const ${file.name} = () => {return <></>}\n\nexport default ${file.name.slice(1)}`
         )
       }
     })).then(() => {
