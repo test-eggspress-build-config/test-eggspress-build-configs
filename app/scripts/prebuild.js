@@ -361,6 +361,8 @@ const importUserComponents = async () => {
     const componentFiles = filesInComponentFolder.filter(
       x => x[x.lastIndexOf('/') + 1] === x[x.lastIndexOf('/') + 1].toUpperCase()
     ).filter(
+      x => !x.startsWith('#')
+    ).filter(
       x => x.indexOf('.') > 0
     ).filter(
       x => (x.endsWith('ts') || x.endsWith('tsx')) || x.endsWith('js') || x.endsWith('jsx')
