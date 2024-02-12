@@ -371,7 +371,7 @@ const importUserComponents = async () => {
           name: file.slice(file.lastIndexOf('/') + 1, file.lastIndexOf('.')),
           source: file,
           destination: `${destinationPath}/${file.slice(file.lastIndexOf('/') + 1)}`,
-          isEnabled: file.slice(file.lastIndexOf('/') + 1, file.lastIndexOf('.'))[0] === '#' ? false : true
+          isEnabled: file.slice(file.lastIndexOf('/') + 1)[0] === '#' ? false : true
         }
       }
     )
@@ -380,6 +380,13 @@ const importUserComponents = async () => {
 
     if ( componentFiles ) {
       console.log('    Found custom components in workspace folder my_components:')
+      componentFiles.forEach(file => {
+        if (file.isEnabled) {
+          console.log(`      Copy ${file.source} to ${file.destination}`)
+        } else {
+          console.log(`      Skip ${file.source} (not enabled)`)
+        }
+      })
     }
 
     const packagesToInstall = new Set([])
@@ -388,7 +395,6 @@ const importUserComponents = async () => {
       componentNames.push(file.name)
 
       if (file.isEnabled) {
-        console.log(`    Info: Copied ${file.source} to ${file.destination}`)
         const firstLine = await getFirstLine(file.source)
         if ( firstLine.startsWith('//') ) {
           const packages = firstLine.slice(2).split(',').map(x => x.trim()).filter(x => x.length)
@@ -407,7 +413,6 @@ const importUserComponents = async () => {
           } catch {}
         }
       } else {
-        console.log(`    Info: Skipped ${file.name.slice(1)} (not enabled)`)
         fs.writeFileSync(
           `${destinationPath}/${filename}`,
           `const ${file.name} = () => {return <></>}\n\nexport default ${file.name}`
