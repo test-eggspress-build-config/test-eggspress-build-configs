@@ -366,12 +366,13 @@ const importUserComponents = async () => {
       x => (x.endsWith('ts') || x.endsWith('tsx')) || x.endsWith('js') || x.endsWith('jsx')
     ).map(
       (file) => {
+        const isEnabled = file.slice(file.lastIndexOf('/') + 1)[0] === '#' ? false : true
         return {
-          filename: file.slice(file.lastIndexOf('/') + 1),
-          name: file.slice(file.lastIndexOf('/') + 1, file.lastIndexOf('.')),
+          filename: file.slice(file.lastIndexOf('/') + (isEnabled ? 1 : 2)),
+          name: file.slice(file.lastIndexOf('/') + (isEnabled ? 1 : 2), file.lastIndexOf('.')),
           source: file,
           destination: `${destinationPath}/${file.slice(file.lastIndexOf('/') + 1)}`,
-          isEnabled: file.slice(file.lastIndexOf('/') + 1)[0] === '#' ? false : true
+          isEnabled: isEnabled
         }
       }
     )
@@ -382,9 +383,9 @@ const importUserComponents = async () => {
       console.log('    Found custom components in workspace folder my_components')
       componentFiles.forEach(file => {
         if (file.isEnabled) {
-          console.log(`      Copy ${file.source} to ${file.destination}`)
+          console.warn(`      Copy ${file.source} to ${file.destination}`)
         } else {
-          console.log(`      Skip ${file.source} (not enabled)`)
+          console.warn(`      Skip ${file.source} (not enabled)`)
         }
       })
     }
@@ -414,8 +415,8 @@ const importUserComponents = async () => {
         }
       } else {
         fs.writeFileSync(
-          `${destinationPath}/${file.name.slice(1)}.tsx`,
-          `const ${file.name.slice(1)} = () => {return <></>}\n\nexport default ${file.name.slice(1)}`
+          `${destinationPath}/${file.filename}`,
+          `const ${file.name} = () => {return <></>}\n\nexport default ${file.name}`
         )
       }
     })).then(() => {
@@ -430,7 +431,7 @@ const importUserComponents = async () => {
         componentFiles.forEach((file) => {
           fs.appendFileSync(
             'app/_components/UserComponents.tsx',
-            `\nimport { default as ${file.name.slice(file.isEnabled ? 0 : 1)} } from './UserComponents/${file.name.slice(file.isEnabled ? 0 : 1)}'`
+            `\nimport { default as ${file.name} } from './UserComponents/${file.name}'`
           )
         })
         fs.appendFileSync(
