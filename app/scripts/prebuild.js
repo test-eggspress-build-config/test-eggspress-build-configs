@@ -371,7 +371,7 @@ const importUserComponents = async () => {
           name: file.slice(file.lastIndexOf('/') + 1, file.lastIndexOf('.')),
           source: file,
           destination: `${destinationPath}/${file.slice(file.lastIndexOf('/') + 1)}`,
-          isEnabled: file[0] === '#' ? false : true
+          isEnabled: file.slice(file.lastIndexOf('/') + 1, file.lastIndexOf('.'))[0] === '#' ? false : true
         }
       }
     )
@@ -400,13 +400,14 @@ const importUserComponents = async () => {
         }
 
         fs.copySync(file.source, file.destination)
-        
+
         if (fs.existsSync(`my_components/${file.name}`)) {
           try {
             fs.copySync(`my_components/${file.name}`, `${destinationPath}/${file.name}`)
           } catch {}
         }
       } else {
+        console.log(`    Info: Skipped ${file.name.slice(1)} (not enabled)`)
         fs.writeFileSync(
           `${destinationPath}/${filename}`,
           `const ${file.name} = () => {return <></>}\n\nexport default ${file.name}`
