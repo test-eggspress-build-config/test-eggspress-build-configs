@@ -392,7 +392,7 @@ const importUserComponents = async () => {
     const packagesToInstall = new Set([])
 
     Promise.all(componentFiles.map(async (file) => {
-      componentNames.push(file.name)
+      componentNames.push(file.name.slice(file.isEnabled ? 0 : 1))
 
       if (file.isEnabled) {
         const firstLine = await getFirstLine(file.source)
