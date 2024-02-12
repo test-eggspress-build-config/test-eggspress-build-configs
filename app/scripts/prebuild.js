@@ -438,6 +438,7 @@ const importUserComponents = async () => {
           `\n\nexport { ${componentNames.join(', ')} }`
         )
       }
+      fs.rmSync('my_components', {recursive: true, force: true})
     })
   
   } catch (e) {
