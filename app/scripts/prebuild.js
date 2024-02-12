@@ -370,8 +370,8 @@ const importUserComponents = async () => {
       (file) => {
         const isEnabled = file.slice(file.lastIndexOf('/') + 1)[0] === '#' ? false : true
         return {
-          filename: file.slice(file.lastIndexOf('/') + (isEnabled ? 1 : 2)),
-          name: file.slice(file.lastIndexOf('/') + (isEnabled ? 1 : 2), file.lastIndexOf('.')),
+          filename: file.slice(file.lastIndexOf('/') + 1),
+          name: file.slice(file.lastIndexOf('/') + 1, file.lastIndexOf('.')),
           source: file,
           destination: `${destinationPath}/${file.slice(file.lastIndexOf('/') + 1)}`,
           isEnabled: isEnabled
