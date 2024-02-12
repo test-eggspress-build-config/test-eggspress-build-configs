@@ -370,10 +370,10 @@ const importUserComponents = async () => {
       (file) => {
         const isEnabled = file.slice(file.lastIndexOf('/') + 1)[0] === '#' ? false : true
         return {
-          filename: file.slice(file.lastIndexOf('/') + 1),
-          name: file.slice(file.lastIndexOf('/') + 1, file.lastIndexOf('.')),
+          filename: file.slice(file.lastIndexOf('/') + (isEnabled ? 1 : 2)),
+          name: file.slice(file.lastIndexOf('/') + (isEnabled ? 1 : 2), file.lastIndexOf('.')),
           source: file,
-          destination: `${destinationPath}/${file.slice(file.lastIndexOf('/') + 1)}`,
+          destination: `${destinationPath}/${file.slice(file.lastIndexOf('/') + (isEnabled ? 1 : 2))}`,
           isEnabled: isEnabled
         }
       }
@@ -395,7 +395,7 @@ const importUserComponents = async () => {
     const packagesToInstall = new Set([])
 
     Promise.all(componentFiles.map(async (file) => {
-      componentNames.push(file.name.slice(file.isEnabled ? 0 : 1))
+      componentNames.push(file.name)
 
       if (file.isEnabled) {
         const firstLine = await getFirstLine(file.source)
