@@ -359,9 +359,7 @@ const importUserComponents = async () => {
     const destinationPath = `app/_components/UserComponents`
   
     const componentFiles = filesInComponentFolder.filter(
-      x => x[x.lastIndexOf('/') + 1] === x[x.lastIndexOf('/') + 1].toUpperCase()
-    ).filter(
-      x => !x.startsWith('#')
+      x => (x[0] === x[0].toUpperCase() || x[0] === '#')
     ).filter(
       x => x.indexOf('.') > 0
     ).filter(
@@ -372,7 +370,8 @@ const importUserComponents = async () => {
           filename: file.slice(file.lastIndexOf('/') + 1),
           name: file.slice(file.lastIndexOf('/') + 1, file.lastIndexOf('.')),
           source: file,
-          destination: `${destinationPath}/${file.slice(file.lastIndexOf('/') + 1)}`
+          destination: `${destinationPath}/${file.slice(file.lastIndexOf('/') + 1)}`,
+          isEnabled: file[0] === '#' ? false : true
         }
       }
     )
@@ -387,21 +386,29 @@ const importUserComponents = async () => {
 
     Promise.all(componentFiles.map(async (file) => {
       componentNames.push(file.name)
-      console.log(`    Info: Copied ${file.source} to ${file.destination}`)
-      const firstLine = await getFirstLine(file.source)
-      if ( firstLine.startsWith('//') ) {
-        const packages = firstLine.slice(2).split(',').map(x => x.trim()).filter(x => x.length)
-        if ( packages ) {
-          packages.forEach((packageToInstall) => {
-            packagesToInstall.add(packageToInstall)
-          })
+
+      if (file.isEnabled) {
+        console.log(`    Info: Copied ${file.source} to ${file.destination}`)
+        const firstLine = await getFirstLine(file.source)
+        if ( firstLine.startsWith('//') ) {
+          const packages = firstLine.slice(2).split(',').map(x => x.trim()).filter(x => x.length)
+          if ( packages ) {
+            packages.forEach((packageToInstall) => {
+              packagesToInstall.add(packageToInstall)
+            })
+          }
         }
-      }
-      fs.copySync(file.source, file.destination)
-      if (fs.existsSync(`my_components/${file.name}`)) {
-        try {
-          fs.copySync(`my_components/${file.name}`, `${destinationPath}/${file.name}`)
-        } catch {}
+        fs.copySync(file.source, file.destination)
+        if (fs.existsSync(`my_components/${file.name}`)) {
+          try {
+            fs.copySync(`my_components/${file.name}`, `${destinationPath}/${file.name}`)
+          } catch {}
+        }
+      } else {
+        fs.writeFileSync(
+          `${destinationPath}/${file.name}`,
+          `const ${file.name} = () => {return <></>}\nexport default ${file.name}`
+        )
       }
     })).then(() => {
       Array.from(packagesToInstall).forEach((packageToInstall) => {
