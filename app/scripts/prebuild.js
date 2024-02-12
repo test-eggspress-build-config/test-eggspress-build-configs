@@ -430,7 +430,7 @@ const importUserComponents = async () => {
         componentFiles.forEach((file) => {
           fs.appendFileSync(
             'app/_components/UserComponents.tsx',
-            `\nimport { default as ${file.name} } from './UserComponents/${file.name}'`
+            `\nimport { default as ${file.name.slice(file.isEnabled ? 0 : 1)} } from './UserComponents/${file.name.slice(file.isEnabled ? 0 : 1)}'`
           )
         })
         fs.appendFileSync(
