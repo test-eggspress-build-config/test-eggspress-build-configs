@@ -379,7 +379,7 @@ const importUserComponents = async () => {
     let componentNames = []
 
     if ( componentFiles ) {
-      console.log('    Found custom components in workspace folder my_components:')
+      console.log('    Found custom components in workspace folder my_components')
       componentFiles.forEach(file => {
         if (file.isEnabled) {
           console.log(`      Copy ${file.source} to ${file.destination}`)
@@ -414,7 +414,7 @@ const importUserComponents = async () => {
         }
       } else {
         fs.writeFileSync(
-          `${destinationPath}/${filename}`,
+          `${destinationPath}/${file.name}.tsx`,
           `const ${file.name} = () => {return <></>}\n\nexport default ${file.name}`
         )
       }
