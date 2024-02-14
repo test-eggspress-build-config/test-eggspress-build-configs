@@ -418,7 +418,7 @@ const importUserComponents = async () => {
       } else {
         fs.writeFileSync(
           `${destinationPath}/${file.filename}`,
-          `import React from 'react'\n\nconst ${file.name} = (children: React.ReactNode) => {return <>{children}</>}\n\nexport default ${file.name}`
+          `const ${file.name} = () => {return <></>}\n\nexport default ${file.name}`
         )
       }
     })).then(() => {
