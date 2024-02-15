@@ -1,8 +1,25 @@
-const fs = require('fs-extra')
-const { glob } = require('glob')
+const fs = require('fs')
+const path = require('path')
 const archiver = require('archiver')
 const readline = require('readline')
 const { execSync } = require('child_process')
+
+function getFiles(dir) {
+  let results = [];
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+  for (let entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      results = results.concat(getFiles(fullPath));
+    } else {
+      results.push(fullPath);
+    }
+  }
+
+  return results;
+}
 
 const consoleLogFile = async (filepath) => {
   try {
@@ -309,7 +326,7 @@ Object.keys(assetsMap).map((file) => {
   const destinationFile = `./${assetsMap[file]}${file}`
 
   if (fs.existsSync(sourceFile)) {
-    fs.copySync(sourceFile, destinationFile)
+    fs.copyFileSync(sourceFile, destinationFile)
   }
 })
 
@@ -345,17 +362,31 @@ new Promise((resolve, reject) => {
 
 // Load custom components from my_components user folder
 
-async function getFirstLine(filePath) {
-  const fileContent = await fs.readFile(filePath, 'utf-8');
-  return (fileContent.match(/(^.*)/) || [])[1] || '';
-} 
+
+const getFirstLine = async (filepath) => {
+  try {
+    const fileStream = fs.createReadStream(filepath)
+    if (fileStream) {
+      const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity
+      })
+
+      for await (const line of rl) {
+        return line
+      }
+    }
+  } catch (e) {
+    console.log(`Could not read file ${filepath}: ${e}`)
+  }
+}
 
 
 const importUserComponents = async () => {
   try {
     fs.writeFileSync('app/_components/UserComponents.tsx', '')
   
-    const filesInComponentFolder = await glob('my_components/*')
+    const filesInComponentFolder = getFiles('my_components/*')
     const destinationPath = `app/_components/UserComponents`
 
     fs.mkdirSync(destinationPath, {recursive: true})
@@ -408,11 +439,14 @@ const importUserComponents = async () => {
           }
         }
 
-        fs.copySync(file.source, file.destination)
+        fs.copyFileSync(file.source, file.destination)
 
         if (fs.existsSync(`my_components/${file.name}`)) {
           try {
-            fs.copySync(`my_components/${file.name}`, `${destinationPath}/${file.name}`)
+            const filesToCopy = filesInComponentFolder.filter(filename => filename.startsWith(`my_components/${file.name}/`))
+            filesToCopy.forEach(file => {
+              fs.copyFileSync(`my_components/${file.name}`, `${destinationPath}/${file.name}`)
+            })
           } catch {}
         }
       } else {
