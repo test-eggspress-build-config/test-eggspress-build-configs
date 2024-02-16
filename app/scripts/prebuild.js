@@ -412,6 +412,9 @@ const getFirstLine = async (filepath) => {
 }
 
 const createDummyComponents = async () => {
+  const destinationPath = `app/_components/UserComponents`
+  fs.mkdirSync(destinationPath, {recursive: true}) 
+  
   try {
     filesInPostFolder = getFiles('my_posts')
   } catch { return }
@@ -570,4 +573,4 @@ loadUserComponents()
 setTimeout(() => {
   const files = getFiles('app/_components/UserComponents', true)
   files.forEach(file => {console.log(file)})
-}, 8000)
+}, 5000)
