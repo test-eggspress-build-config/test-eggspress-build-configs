@@ -386,7 +386,7 @@ const importUserComponents = async () => {
   try {
     fs.writeFileSync('app/_components/UserComponents.tsx', '')
   
-    const filesInComponentFolder = getFiles('my_components/*')
+    const filesInComponentFolder = getFiles('my_components')
     const destinationPath = `app/_components/UserComponents`
 
     fs.mkdirSync(destinationPath, {recursive: true})
