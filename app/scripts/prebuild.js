@@ -460,9 +460,16 @@ const importUserComponents = async () => {
       filesInComponentFolder = getFiles('my_components')
     } catch (e) {
 
-      fs.writeFileSync(
+      const dummyComponents = [...dummyComponentNames, 'Dummy']
+      dummyComponents.forEach((dummyName) => {
+        fs.appendFileSync(
+          'app/_components/UserComponents.tsx',
+          `const ${dummyName} = () => {return <></>}\n }`
+        )
+      })
+      fs.appendFileSync(
         'app/_components/UserComponents.tsx',
-        `\n\nconst Dummy = () => {return <></>}\n\nexport { Dummy }`
+        `\n\nexport { ${dummyName.join(', ')} }`
       )
 
       throw new Error('The directory my_components does not exist. No components were imported.')
