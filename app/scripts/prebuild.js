@@ -432,9 +432,7 @@ const createDummyComponents = async () => {
   } catch { return }
 
   const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi;
-
-  console.log('all markdown', allMarkdownData)
-
+  
   for (const match of allMarkdownData.matchAll(tagRegex)) {
     const tagName = match[1];
     tagsSet.add(tagName)
@@ -583,11 +581,8 @@ const importUserComponents = async () => {
 const loadUserComponents = async () => {
   await createDummyComponents()
   await importUserComponents()
+  consoleLogFile('app/_components/UserComponents.tsx')
 }
 
 
 loadUserComponents()
-setTimeout(() => {
-  const files = getFiles('app/_components/UserComponents', true)
-  files.forEach(file => {console.log(file)})
-}, 5000)
