@@ -455,12 +455,13 @@ const importUserComponents = async () => {
                 destination: `${destinationPath}/${file.name}/${module.slice(module.lastIndexOf('/') + 1)}`,
               }
             })
-            console.log('componentModules',componentModules)
             
             componentModules.forEach(module => {
-              fs.copyFileSync(module.source, module.destination)
+              try {
+                fs.copyFileSync(module.source, module.destination)
+              } catch (e) { console.log('      > Error: ', e)}
             })
-          } catch {}
+          } catch (e) { console.log('      > Error: ', e)}
         }
       } else {
         fs.writeFileSync(
