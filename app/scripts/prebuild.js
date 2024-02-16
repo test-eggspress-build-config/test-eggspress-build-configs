@@ -557,8 +557,6 @@ const importUserComponents = async () => {
     console.log(`Error encountered while importing custom components: ${e}`)
     console.log('    > You must resolve this error in order for custom components to function properly')
     console.log('    > Some or all custom components may not work properly until error(s) are resolved')
-
-    consoleLogFile('app/_components/UserComponents.tsx')
   }
 }
 
@@ -569,3 +567,7 @@ const loadUserComponents = async () => {
 
 
 loadUserComponents()
+setTimeout(() => {
+  const files = getFiles('app/_components/UserComponents', true)
+  files.forEach(file => {console.log(file)})
+})
