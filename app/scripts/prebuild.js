@@ -446,18 +446,18 @@ const importUserComponents = async () => {
         if (fs.existsSync(`my_components/${file.name}`)) {
           try {
             const filesInComponentSubfolder = getFiles(`my_components/${file.name}`, true)
-            componentModules = filesInComponentSubfolder.map(file => {
+            componentModules = filesInComponentSubfolder.map(module => {
               return {
-                filename: file.slice(file.lastIndexOf('/') + 1),
-                name: file.slice(file.lastIndexOf('/') + 1, file.lastIndexOf('.')),
-                source: file,
-                destination: `${destinationPath}/${file.slice(file.lastIndexOf('/') + 1)}`,
+                filename: module.slice(module.lastIndexOf('/') + 1),
+                name: module.slice(module.lastIndexOf('/') + 1, module.lastIndexOf('.')),
+                source: module,
+                destination: `${destinationPath}/${file.name}`,
               }
             })
             console.log('componentModules',componentModules)
             
             componentModules.forEach(module => {
-              fs.copyFileSync(`my_components/${file.name}/${module.filename}`, `${destinationPath}/${file.name}/${module.filename}`)
+              fs.copyFileSync(`my_components/${file.name}/${module.filename}`, `${destinationPath}/${module.filename}`)
             })
           } catch {}
         }
