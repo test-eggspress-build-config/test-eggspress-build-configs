@@ -431,7 +431,7 @@ const createDummyComponents = async () => {
     }))
   } catch { return }
 
-  const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*\/?>?/gi;
+  const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi;
   
   for (const match of allMarkdownData.matchAll(tagRegex)) {
     const tagName = match[1];
@@ -457,7 +457,7 @@ const importUserComponents = async () => {
     let filesInComponentFolder = []
     
     try {
-      filesInComponentFolder = getFiles('my_components')
+      filesInComponentFolder = getFiles('my_components', true)
     } catch (e) {
 
       const dummyComponents = [...dummyComponentNames, 'Dummy']
