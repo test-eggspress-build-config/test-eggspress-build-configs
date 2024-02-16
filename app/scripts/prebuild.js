@@ -425,6 +425,8 @@ const createDummyComponents = async () => {
   })).then(() => {
     const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi;
 
+    console.log('all markdown', allMarkdownData)
+
     for (const match of allMarkdownData.matchAll(tagRegex)) {
       const tagName = match[1];
       fs.writeFileSync(
