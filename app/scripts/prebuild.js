@@ -4,7 +4,7 @@ const archiver = require('archiver')
 const readline = require('readline')
 const { execSync } = require('child_process')
 
-function getFiles(dir) {
+function getFiles(dir, recursive=false) {
   let results = [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
 
@@ -12,7 +12,9 @@ function getFiles(dir) {
     const fullPath = path.join(dir, entry.name);
 
     if (entry.isDirectory()) {
-      results = results.concat(getFiles(fullPath));
+      if (recursive) {
+        results = results.concat(getFiles(fullPath));
+      }
     } else {
       results.push(fullPath);
     }
@@ -443,9 +445,19 @@ const importUserComponents = async () => {
 
         if (fs.existsSync(`my_components/${file.name}`)) {
           try {
-            const filesToCopy = filesInComponentFolder.filter(filename => filename.startsWith(`my_components/${file.name}/`))
-            filesToCopy.forEach(file => {
-              fs.copyFileSync(`my_components/${file.name}`, `${destinationPath}/${file.name}`)
+            const filesInComponentSubfolder = getFiles(`my_components/${file.name}`, true)
+            componentModules = filesInComponentSubfolder.map(file => {
+              return {
+                filename: file.slice(file.lastIndexOf('/') + 1),
+                name: file.slice(file.lastIndexOf('/') + 1, file.lastIndexOf('.')),
+                source: file,
+                destination: `${destinationPath}/${file.slice(file.lastIndexOf('/') + 1)}`,
+              }
+            })
+            console.log('componentModules',componentModules)
+            
+            componentModules.forEach(module => {
+              fs.copyFileSync(`my_components/${file.name}/${module.filename}`, `${destinationPath}/${file.name}/${module.filename}`)
             })
           } catch {}
         }
