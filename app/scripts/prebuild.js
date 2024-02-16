@@ -464,7 +464,7 @@ const importUserComponents = async () => {
       dummyComponents.forEach((dummyName) => {
         fs.appendFileSync(
           'app/_components/UserComponents.tsx',
-          `const ${dummyName} = () => {return <></>}\n }`
+          `const ${dummyName} = () => {return <></>}\n`
         )
       })
       fs.appendFileSync(
