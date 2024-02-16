@@ -425,18 +425,18 @@ const createDummyComponents = async () => {
     console.log(filesInPostFolder)
   } catch { return }
 
-  let allMarkdownData = ''
+  let markdownData = []
   try {
     await Promise.all(filesInPostFolder.map(async (file) => {
-      allMarkdownData += await dumpMarkdownAsString(file)
-      console.log('reading', file)
+      markdownData.push(await dumpMarkdownAsString(file))
     }))
-    console.log('length of all markdown files', allMarkdownData.length)
   } catch { return }
 
   const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi;
   
-  for (const match of allMarkdownData.matchAll(tagRegex)) {
+  const markdownDataAsString = markdownData.join('\n\n')
+
+  for (const match of markdownDataAsString.matchAll(tagRegex)) {
     const tagName = match[1];
     tagsSet.add(tagName)
     console.log('found tag', tagName)
