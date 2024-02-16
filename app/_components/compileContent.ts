@@ -79,6 +79,7 @@ const compileContent = async (type: string, slug:string,): Promise<compiledRespo
     return {...source, contentLength, images}
   } catch (e) {
     console.log(`    Encountered error while compiling ${slug} (${type}) - this file will be skipped (Error: ${e})`)
+    return {content: '', frontmatter: {}, contentLength: 0, images: []}
   }
 }
 
