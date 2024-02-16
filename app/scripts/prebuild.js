@@ -421,9 +421,7 @@ const createDummyComponents = async () => {
   const tagsSet = new Set()
   
   try {
-    filesInPostFolder = getFiles('my_posts', true)
-    const filesInPageFolder = getFiles('my_pages', true)
-    filesInPostFolder = [...filesInPostFolder, ...filesInPageFolder]
+    filesInPostFolder = [...getFiles('my_posts', true), ...getFiles('my_pages', true)]
     console.log(filesInPostFolder)
   } catch { return }
 
@@ -432,6 +430,7 @@ const createDummyComponents = async () => {
     await Promise.all(filesInPostFolder.map(async (file) => {
       allMarkdownData += await dumpMarkdownAsString(file)
     }))
+    console.log('length of all markdown files', allMarkdownData.length)
   } catch { return }
 
   const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi;
@@ -439,6 +438,7 @@ const createDummyComponents = async () => {
   for (const match of allMarkdownData.matchAll(tagRegex)) {
     const tagName = match[1];
     tagsSet.add(tagName)
+    console.log('found tag', tagName)
   }
 
   tagsSet.forEach(tagName => {
