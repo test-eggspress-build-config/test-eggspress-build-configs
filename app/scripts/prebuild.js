@@ -429,6 +429,7 @@ const createDummyComponents = async () => {
   try {
     await Promise.all(filesInPostFolder.map(async (file) => {
       allMarkdownData += await dumpMarkdownAsString(file)
+      console.log('reading', file)
     }))
     console.log('length of all markdown files', allMarkdownData.length)
   } catch { return }
