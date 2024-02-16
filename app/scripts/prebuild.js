@@ -499,9 +499,9 @@ const importUserComponents = async () => {
 
 const loadUserComponents = async () => {
   await importUserComponents()
-  fs.readdirSync('app/_components/UserComponents').forEach(file => {console.log(file)})
-  fs.readdirSync('app/_components/UserComponents/Chart').forEach(file => {console.log(file)})
 }
 
 
 loadUserComponents()
+fs.readdirSync('app/_components/UserComponents').forEach(file => {console.log(file)})
+fs.readdirSync('app/_components/UserComponents/Chart').forEach(file => {console.log(file)})
