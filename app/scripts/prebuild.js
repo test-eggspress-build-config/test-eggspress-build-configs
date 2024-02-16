@@ -513,4 +513,7 @@ setTimeout(() => {
 
   console.log('\n\nwhat UserComponents.tsx looks like:\n\n')
   consoleLogFile('app/_components/UserComponents.tsx')
+
+  console.log('\n\nwhat Chart.tsx looks like:\n\n')
+  consoleLogFile('app/_components/UserComponents/Chart.tsx')
 }, 5000)
