@@ -469,7 +469,7 @@ const importUserComponents = async () => {
       })
       fs.appendFileSync(
         'app/_components/UserComponents.tsx',
-        `\n\nexport { ${dummyName.join(', ')} }`
+        `\n\nexport { ${dummyComponents.join(', ')} }`
       )
 
       throw new Error('The directory my_components does not exist. No components were imported.')
