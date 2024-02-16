@@ -507,6 +507,7 @@ const loadUserComponents = async () => {
 loadUserComponents()
 setTimeout(() => {
 
+  fs.readdirSync('app/_components').forEach(file => {console.log('app/_components', file)})
   fs.readdirSync('app/_components/UserComponents').forEach(file => {console.log('app/_components/UserComponents', file)})
   fs.readdirSync('app/_components/UserComponents/Chart').forEach(file => {console.log('app/_components/UserComponents/Chart', file)})
 
