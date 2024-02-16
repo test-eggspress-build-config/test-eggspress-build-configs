@@ -444,6 +444,7 @@ const importUserComponents = async () => {
         fs.copyFileSync(file.source, file.destination)
 
         if (fs.existsSync(`my_components/${file.name}`)) {
+          fs.mkdirSync(`app/_components/UserComponents/${file.name}`)
           try {
             const filesInComponentSubfolder = getFiles(`my_components/${file.name}`, true)
             componentModules = filesInComponentSubfolder.map(module => {
