@@ -411,6 +411,8 @@ const getFirstLine = async (filepath) => {
   }
 }
 
+let dummyComponentNames = []
+
 const createDummyComponents = async () => {
   const destinationPath = `app/_components/UserComponents`
   fs.mkdirSync(destinationPath, {recursive: true}) 
@@ -439,11 +441,13 @@ const createDummyComponents = async () => {
   }
 
   tagsSet.forEach(tagName => {
-    console.log('create dummy tag', tagName)
-    fs.writeFileSync(
-      `app/_components/UserComponents/${tagName}.tsx`,
-      `\nconst ${tagName} = () => {return <></>}\n\nexport { ${tagName }}`
-    )
+    if (tagName[0] === tagName[0].toUpperCase()) {
+      dummyComponentNames.push(tagName)
+      fs.writeFileSync(
+        `app/_components/UserComponents/${tagName}.tsx`,
+        `\nconst ${tagName} = () => {return <></>}\n\nexport { ${tagName }}`
+      )
+    }
   })
 }
 
@@ -555,7 +559,7 @@ const importUserComponents = async () => {
       })
         
       if (componentNames) {
-        componentFiles.forEach((file) => {
+        [...componentFiles, ...dummyComponentNames].forEach((file) => {
           fs.appendFileSync(
             'app/_components/UserComponents.tsx',
             `\nimport { default as ${file.name} } from './UserComponents/${file.name}'`
