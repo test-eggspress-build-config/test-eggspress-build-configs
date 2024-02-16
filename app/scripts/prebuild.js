@@ -441,7 +441,7 @@ const createDummyComponents = async () => {
   }
 
   tagsSet.forEach(tagName => {
-    if (tagName[0] === tagName[0].toUpperCase()) {
+    if (tagName && tagName[0] === tagName[0].toUpperCase()) {
       dummyComponentNames.push(tagName)
       fs.writeFileSync(
         `app/_components/UserComponents/${tagName}.tsx`,
