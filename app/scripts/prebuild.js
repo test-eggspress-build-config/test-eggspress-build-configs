@@ -414,25 +414,36 @@ const getFirstLine = async (filepath) => {
 const createDummyComponents = async () => {
   const destinationPath = `app/_components/UserComponents`
   fs.mkdirSync(destinationPath, {recursive: true}) 
+
+  let filesInPostFolder = []
+  const tagsSet = new Set()
   
   try {
     filesInPostFolder = getFiles('my_posts')
   } catch { return }
 
   let allMarkdownData = ''
-  Promise.all(filesInPostFolder.map(async (file) => {
-    allMarkdownData += await dumpMarkdownAsString(file)
-  })).then(() => {
-    const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi;
+  try {
+    await Promise.all(filesInPostFolder.map(async (file) => {
+      allMarkdownData += await dumpMarkdownAsString(file)
+    }))
+  } catch { return }
 
-    console.log('all markdown', allMarkdownData)
+  const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi;
 
-    for (const match of allMarkdownData.matchAll(tagRegex)) {
-      const tagName = match[1];
-      fs.writeFileSync(
-        `app/_components/UserComponents/${tagName}.tsx`,
-        `\nconst ${tagName} = () => {return <></>}\n\nexport { ${tagName }}`)
-    }
+  console.log('all markdown', allMarkdownData)
+
+  for (const match of allMarkdownData.matchAll(tagRegex)) {
+    const tagName = match[1];
+    tagsSet.add(tagName)
+  }
+
+  tagsSet.forEach(tagName => {
+    console.log('create dummy tag', tagName)
+    fs.writeFileSync(
+      `app/_components/UserComponents/${tagName}.tsx`,
+      `\nconst ${tagName} = () => {return <></>}\n\nexport { ${tagName }}`
+    )
   })
 }
 
