@@ -511,8 +511,6 @@ setTimeout(() => {
   fs.readdirSync('app/_components/UserComponents').forEach(file => {console.log('app/_components/UserComponents', file)})
   fs.readdirSync('app/_components/UserComponents/Chart').forEach(file => {console.log('app/_components/UserComponents/Chart', file)})
 
-  console.log('\n\nwhat UserComponents.tsx looks like:\n\n')
-  consoleLogFile('app/_components/UserComponents.tsx')
 
   console.log('\n\nwhat Chart.tsx looks like:\n\n')
   consoleLogFile('app/_components/UserComponents/Chart.tsx')
