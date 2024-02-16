@@ -387,8 +387,17 @@ const getFirstLine = async (filepath) => {
 const importUserComponents = async () => {
   try {
     fs.writeFileSync('app/_components/UserComponents.tsx', '')
-  
-    const filesInComponentFolder = getFiles('my_components')
+    
+    try {
+      const filesInComponentFolder = getFiles('my_components')
+    } catch (e) {
+
+      fs.appendFileSync(
+        'app/_components/UserComponents.tsx',
+        `\n\nconst Dummy = () => {return <></>}\n\nexport { Dummy }`
+      )
+      throw new Error('The directory my_components does not exist. No components were imported.')
+    }
     const destinationPath = `app/_components/UserComponents`
 
     fs.mkdirSync(destinationPath, {recursive: true})
