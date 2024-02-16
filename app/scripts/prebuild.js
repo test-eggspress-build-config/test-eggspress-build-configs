@@ -41,6 +41,32 @@ const consoleLogFile = async (filepath) => {
   }
 }
 
+const dumpMarkdownAsString = async (filepath) => {
+  if ( !(filepath.endsWith('md') || filepath.endsWith('mdx'))) {
+    return ''
+  }
+
+  let fileData = []
+
+  try {
+    const fileStream = fs.createReadStream(filepath)
+    if (fileStream) {
+      const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity
+      })
+
+      for await (const line of rl) {
+        fileData.push(line)
+      }
+      
+      return fileData.join(' \n')
+    }
+  } catch (e) {
+    console.log(`Could not read file ${filepath}: ${e}`)
+  }
+}
+
 const getValueFromFileWithKey = async (filepath, key) => {
   try {
     const fileStream = fs.createReadStream(filepath)
@@ -385,21 +411,45 @@ const getFirstLine = async (filepath) => {
   }
 }
 
+const createDummyComponents = async () => {
+  try {
+    filesInPostFolder = getFiles('my_posts')
+  } catch { return }
+
+  let allMarkdownData = ''
+  Promise.all(filesInPostFolder.map(async (file) => {
+    allMarkdownData += dumpMarkdownAsString(file)
+  })).then(() => {
+    const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi;
+
+    for (const match of markdownData.matchAll(tagRegex)) {
+      const tagName = match[1];
+      fs.writeFileSync(
+        `app/_components/UserComponents/${tagName}.tsx`,
+        `\nconst ${tagName} = () => {return <></>}\n\nexport { ${tagName }}`)
+    }
+  })
+}
+
 
 const importUserComponents = async () => {
   try {
     fs.writeFileSync('app/_components/UserComponents.tsx', '')
+
+    let filesInComponentFolder = []
     
     try {
-      const filesInComponentFolder = getFiles('my_components')
+      filesInComponentFolder = getFiles('my_components')
     } catch (e) {
 
-      fs.appendFileSync(
+      fs.writeFileSync(
         'app/_components/UserComponents.tsx',
         `\n\nconst Dummy = () => {return <></>}\n\nexport { Dummy }`
       )
+
       throw new Error('The directory my_components does not exist. No components were imported.')
     }
+
     const destinationPath = `app/_components/UserComponents`
 
     fs.mkdirSync(destinationPath, {recursive: true})
@@ -507,10 +557,13 @@ const importUserComponents = async () => {
     console.log(`Error encountered while importing custom components: ${e}`)
     console.log('    > You must resolve this error in order for custom components to function properly')
     console.log('    > Some or all custom components may not work properly until error(s) are resolved')
+
+    consoleLogFile('app/_components/UserComponents.tsx')
   }
 }
 
 const loadUserComponents = async () => {
+  await createDummyComponents()
   await importUserComponents()
 }
 
