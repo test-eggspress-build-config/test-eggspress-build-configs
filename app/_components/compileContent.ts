@@ -33,48 +33,53 @@ const compileContent = async (type: string, slug:string,): Promise<compiledRespo
   //   scopedFrontmatter = scopedSource.frontmatter
   // }
   
-  const source = await compileMDX({
-    source: markdownData,
-    options: {
-      parseFrontmatter: true,
-      mdxOptions: {
-        remarkPlugins: [remarkGfm, [eggspressMedia, { slug, imageFiles, filePath }]],
-        // @ts-ignore
-        rehypePlugins: [rehypeSlug, [rehypeHighlight, {languages: all}]]
+  try {
+  
+    const source = await compileMDX({
+      source: markdownData,
+      options: {
+        parseFrontmatter: true,
+        mdxOptions: {
+          remarkPlugins: [remarkGfm, [eggspressMedia, { slug, imageFiles, filePath }]],
+          // @ts-ignore
+          rehypePlugins: [rehypeSlug, [rehypeHighlight, {languages: all}]]
+        }
+      },
+      components: {
+        img: EggspressImage as any,
+        a: EggspressLink as any,
+        table: EggspressTable as any,
+        ...(typeof UserComponents !== 'undefined' ? UserComponents : {})
       }
-    },
-    components: {
-      img: EggspressImage as any,
-      a: EggspressLink as any,
-      table: EggspressTable as any,
-      ...(typeof UserComponents !== 'undefined' ? UserComponents : {})
-    }
-  })
-
-  source.frontmatter.path = filePath
-
-  const images = imageFiles.map((image: ImageFile) => {
-    const imageFile = `/images/${slug}/${image.name}`
-    if (fs.existsSync(`public/${imageFile}`) && !videoExtensions.includes(image.extension)){
-      const dimensions = sizeOf(`${image.path}/${image.name}`)
-      return {
-        url: imageFile,
-        width: dimensions.width,
-        height: dimensions.height
+    })
+  
+    source.frontmatter.path = filePath
+  
+    const images = imageFiles.map((image: ImageFile) => {
+      const imageFile = `/images/${slug}/${image.name}`
+      if (fs.existsSync(`public/${imageFile}`) && !videoExtensions.includes(image.extension)){
+        const dimensions = sizeOf(`${image.path}/${image.name}`)
+        return {
+          url: imageFile,
+          width: dimensions.width,
+          height: dimensions.height
+        }
+      } else {
+        return {
+          url: '',
+          width: 0,
+          height: 0
+        }
       }
-    } else {
-      return {
-        url: '',
-        width: 0,
-        height: 0
-      }
-    }
-  }).filter((image: OGImage) => image.url.length)
-
-  const contentBody = markdownData.slice(markdownData.lastIndexOf('---') + 3).trim()
-  const contentLength = contentBody.length
-
-  return {...source, contentLength, images}
+    }).filter((image: OGImage) => image.url.length)
+  
+    const contentBody = markdownData.slice(markdownData.lastIndexOf('---') + 3).trim()
+    const contentLength = contentBody.length
+  
+    return {...source, contentLength, images}
+  } catch (e) {
+    console.log(`    Encountered error while compiling ${slug} (${type}) - this file will be skipped (Error: ${e})`)
+  }
 }
 
 export default compileContent
