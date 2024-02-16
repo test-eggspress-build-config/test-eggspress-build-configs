@@ -424,6 +424,7 @@ const createDummyComponents = async () => {
     filesInPostFolder = getFiles('my_posts', true)
     const filesInPageFolder = getFiles('my_pages', true)
     filesInPostFolder = [...filesInPostFolder, ...filesInPageFolder]
+    console.log(filesInPostFolder)
   } catch { return }
 
   let allMarkdownData = ''
