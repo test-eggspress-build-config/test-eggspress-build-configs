@@ -28,6 +28,9 @@ const cleanMDX = (mdxContent: string) => {
   const isRecognizedTag = (tagName: string) => Object.keys(UserComponents).includes(tagName)
 
   return mdxContent.replace(tagRegex, (match, tagName) => {
+    if (!isRecognizedTag(tagName)) {
+      console.log(`      > Info: Component with name "${tagName}" not rendered. Ensure that ${tagName} is available in my_components and is properly installed.`)
+    }
     return isRecognizedTag(tagName) ? match : '';
   });
 }
