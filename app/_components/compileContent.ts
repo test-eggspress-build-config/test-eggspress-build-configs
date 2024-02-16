@@ -23,6 +23,15 @@ type compiledResponse = {
   images: OGImage[]
 }
 
+const cleanMDX = (mdxContent: string) => {
+  const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi
+  const isRecognizedTag = (tagName: string) => Object.keys(UserComponents).includes(tagName)
+
+  return mdxContent.replace(tagRegex, (match, tagName) => {
+    return isRecognizedTag(tagName) ? match : '';
+  });
+}
+
 const compileContent = async (type: string, slug:string,): Promise<compiledResponse> => {
   const { markdownData, imageFiles, filePath } = await getContent(type, slug)
   
@@ -36,7 +45,7 @@ const compileContent = async (type: string, slug:string,): Promise<compiledRespo
   try {
   
     const source = await compileMDX({
-      source: markdownData,
+      source: cleanMDX(markdownData),
       options: {
         parseFrontmatter: true,
         mdxOptions: {
