@@ -421,7 +421,9 @@ const createDummyComponents = async () => {
   const tagsSet = new Set()
   
   try {
-    filesInPostFolder = getFiles('my_posts')
+    filesInPostFolder = getFiles('my_posts', true)
+    const filesInPageFolder = getFiles('my_pages', true)
+    filesInPostFolder = [...filesInPostFolder, ...filesInPageFolder]
   } catch { return }
 
   let allMarkdownData = ''
@@ -457,7 +459,7 @@ const importUserComponents = async () => {
     let filesInComponentFolder = []
     
     try {
-      filesInComponentFolder = getFiles('my_components', true)
+      filesInComponentFolder = getFiles('my_components')
     } catch (e) {
 
       const dummyComponents = [...dummyComponentNames, 'Dummy']
