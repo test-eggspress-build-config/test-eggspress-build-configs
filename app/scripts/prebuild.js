@@ -431,7 +431,7 @@ const createDummyComponents = async () => {
     }))
   } catch { return }
 
-  const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi;
+  const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*\/?>?/gi;
   
   for (const match of allMarkdownData.matchAll(tagRegex)) {
     const tagName = match[1];
