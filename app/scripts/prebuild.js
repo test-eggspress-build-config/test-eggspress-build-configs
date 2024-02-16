@@ -421,7 +421,7 @@ const createDummyComponents = async () => {
 
   let allMarkdownData = ''
   Promise.all(filesInPostFolder.map(async (file) => {
-    allMarkdownData += dumpMarkdownAsString(file)
+    allMarkdownData += await dumpMarkdownAsString(file)
   })).then(() => {
     const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi;
 
