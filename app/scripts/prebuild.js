@@ -570,4 +570,4 @@ loadUserComponents()
 setTimeout(() => {
   const files = getFiles('app/_components/UserComponents', true)
   files.forEach(file => {console.log(file)})
-})
+}, 8000)
