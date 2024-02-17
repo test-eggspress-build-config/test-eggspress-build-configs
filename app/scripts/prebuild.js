@@ -569,7 +569,7 @@ const importUserComponents = async () => {
         const allComponents = new Set([])
         componentFiles.map(file => allComponents.add(file.name))
         dummyComponentNames.map(component => allComponents.add(component))
-
+        console.log(allComponents)
         allComponents.forEach(component => {
           fs.appendFileSync(
             'app/_components/UserComponents.tsx',
