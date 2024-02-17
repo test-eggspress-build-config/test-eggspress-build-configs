@@ -463,7 +463,7 @@ const importUserComponents = async () => {
       console.log(filesInComponentFolder)
     } catch (e) {
 
-      const dummyComponents = [...dummyComponentNames, 'Dummy']
+      const dummyComponents = ['Dummy', ...dummyComponentNames]
       dummyComponents.forEach((dummyName) => {
         fs.appendFileSync(
           'app/_components/UserComponents.tsx',
@@ -568,7 +568,10 @@ const importUserComponents = async () => {
         
       if (componentNames || dummyComponentNames) {
         console.log('writing UserComponents.tsx', componentFiles, dummyComponentNames)
-        const allComponents = componentFiles.map(file => file.name).concat(dummyComponentNames)
+        const allComponents = new Set([])
+        componentFiles.map(file => allComponents.add(file.name))
+        dummyComponentNames.map(component => allComponents.add(component))
+
         console.log(allComponents)
         allComponents.forEach(component => {
           fs.appendFileSync(
