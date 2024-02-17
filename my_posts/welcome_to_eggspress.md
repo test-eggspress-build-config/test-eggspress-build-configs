@@ -37,7 +37,7 @@ relatedPost9: ""
 > What's up `code`
 
 <Odyssey test="test">
-##Odyssey Component
+## Odyssey Component
 
 This is a test of a component that does not exist. This text and the header above it and the blockquote below should be visible.
 
