@@ -445,7 +445,7 @@ const createDummyComponents = async () => {
       dummyComponentNames.push(tagName)
       fs.writeFileSync(
         `app/_components/UserComponents/${tagName}.tsx`,
-        `\nconst ${tagName} = () => {return <></>}\n\nexport default ${tagName }`
+        `import React from 'react'\n\nconst ${tagName} = ({children}: {children: React.ReactNode}) => {return <div>{children}</div>}\n\nexport default ${tagName }`
       )
     }
   })
@@ -463,10 +463,11 @@ const importUserComponents = async () => {
     } catch (e) {
 
       const dummyComponents = ['Dummy', ...dummyComponentNames]
+
       dummyComponents.forEach((dummyName) => {
         fs.appendFileSync(
           'app/_components/UserComponents.tsx',
-          `import React from 'react'\nconst ${dummyName} = ({children}: {children: React.ReactNode}) => {return <div>{children}</div>}\n`
+          `const ${dummyName} = ({children}: {children: React.ReactNode}) => {return <div>{children}</div>}\n`
         )
       })
       fs.appendFileSync(
@@ -569,13 +570,14 @@ const importUserComponents = async () => {
         const allComponents = new Set([])
         componentFiles.map(file => allComponents.add(file.name))
         dummyComponentNames.map(component => allComponents.add(component))
-        console.log(allComponents)
+
         allComponents.forEach(component => {
           fs.appendFileSync(
             'app/_components/UserComponents.tsx',
             `\nimport { default as ${component} } from './UserComponents/${component}'`
           )
         })
+
         fs.appendFileSync(
           'app/_components/UserComponents.tsx',
           `\n\nexport { ${Array.from(allComponents).join(', ')} }`
@@ -594,7 +596,6 @@ const importUserComponents = async () => {
 const loadUserComponents = async () => {
   await createDummyComponents()
   await importUserComponents()
-  consoleLogFile('app/_components/UserComponents.tsx')
 }
 
 
