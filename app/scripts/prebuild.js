@@ -460,14 +460,13 @@ const importUserComponents = async () => {
     
     try {
       filesInComponentFolder = getFiles('my_components')
-      console.log(filesInComponentFolder)
     } catch (e) {
 
       const dummyComponents = ['Dummy', ...dummyComponentNames]
       dummyComponents.forEach((dummyName) => {
         fs.appendFileSync(
           'app/_components/UserComponents.tsx',
-          `const ${dummyName} = () => {return <></>}\n`
+          `import React from 'react'\nconst ${dummyName} = ({children}: {children: React.ReactNode}) => {return <div>{children}</div>}\n`
         )
       })
       fs.appendFileSync(
