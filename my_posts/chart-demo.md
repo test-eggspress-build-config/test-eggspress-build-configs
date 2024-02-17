@@ -45,6 +45,18 @@ test test test **test**
 
 <ChartPalette />
 
+<NotExist>**This component doesn't exist** but the child nodes (this bit of text) should still appear</NotExist>
+
+<Blah>
+## The Blah component
+    **This component also doesn't exist** but the child nodes (this bit of text) should still appear
+
+    ```python
+    def blah():
+        return 'blah'
+    ```
+</Blah>
+
 <Chart filename="17GzyU1WboA5SjsmKLOJGDDXirAXE9MveIKvcy8pOC7o" source="google" />
 
 <Chart filename="us_emissions_econ.csv" title="US CO2 Emissions and GDP" primaryYPrefix="$" primaryYSuffix="T" secondaryYSuffix="kt" palette="Purples9" xTitle="Year" secondaryYMin="4000">
