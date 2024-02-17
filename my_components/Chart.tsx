@@ -1,5 +1,5 @@
 // react-chartjs-2, chart.js, csvtojson
-
+'use client'
 import ComboBarLine from './Chart/ComboBarLine'
 import Bubble from './Chart/Bubble'
 import Pie from './Chart/Pie'
