@@ -189,6 +189,11 @@ const Chart = async ({type, title, filename, source, columns, rowStart, rowEnd, 
       intersect: false,
     },
     plugins: {
+      deferred: {
+        xOffset: 150,
+        yOffset: '50%',
+        delay: 500,
+      },
       legend: {
         position: 'bottom' as const,
         display: type === 'bubble' || type === 'scatter' ? false : true,
