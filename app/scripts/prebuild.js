@@ -568,10 +568,12 @@ const importUserComponents = async () => {
         
       if (componentNames || dummyComponentNames) {
         console.log('writing UserComponents.tsx', componentFiles, dummyComponentNames)
-        [...componentFiles, ...dummyComponentNames.map(dummy => {return {name: dummy}})].forEach((file) => {
+        const allComponents = componentFiles.map(file => file.name).concat(dummyComponentNames)
+        console.log(allComponents)
+        allComponents.forEach(component => {
           fs.appendFileSync(
             'app/_components/UserComponents.tsx',
-            `\nimport { default as ${file.name} } from './UserComponents/${file.name}'`
+            `\nimport { default as ${component} } from './UserComponents/${component}'`
           )
         })
         fs.appendFileSync(
