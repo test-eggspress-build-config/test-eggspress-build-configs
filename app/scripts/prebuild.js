@@ -460,6 +460,7 @@ const importUserComponents = async () => {
     
     try {
       filesInComponentFolder = getFiles('my_components')
+      console.log(filesInComponentFolder)
     } catch (e) {
 
       const dummyComponents = [...dummyComponentNames, 'Dummy']
@@ -565,7 +566,8 @@ const importUserComponents = async () => {
         } catch (e) {`    Ran into an error installing ${packageToInstall}: ${e}`}
       })
         
-      if (componentNames) {
+      if (componentNames || dummyComponentNames) {
+        console.log('writing UserComponents.tsx', componentFiles, dummyComponentNames)
         [...componentFiles, ...dummyComponentNames.map(dummy => {return {name: dummy}})].forEach((file) => {
           fs.appendFileSync(
             'app/_components/UserComponents.tsx',
