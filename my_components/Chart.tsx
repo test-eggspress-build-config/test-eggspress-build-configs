@@ -5,7 +5,7 @@ import Bubble from './Chart/Bubble'
 import Pie from './Chart/Pie'
 import { getUserDataRecursively } from '@/app/utils'
 import { IncomingMessage } from 'http'
-import 'chartjs-deferred-plugin'
+import 'chartjs-plugin-deferred'
 
 const fs = require('fs-extra')
 const https = require('node:https')
