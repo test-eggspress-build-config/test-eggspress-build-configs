@@ -5,6 +5,7 @@ import Bubble from './Chart/Bubble'
 import Pie from './Chart/Pie'
 import { getUserDataRecursively } from '@/app/utils'
 import { IncomingMessage } from 'http'
+import { useEffect, useRef, useState } from 'react'
 
 const fs = require('fs-extra')
 const https = require('node:https')
@@ -142,6 +143,36 @@ const Chart = async ({type, title, filename, source, columns, rowStart, rowEnd, 
     console.log(`      Info: Chart ${type ? `of type ${type}` : ''} ${title ? `with title "${title}"` : ''} is missing the "filename" property`)
     return <></>
   }
+
+
+  const [isVisible, setIsVisible] = useState(false)
+  const chartRef = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1,
+      }
+    )
+
+    if (chartRef.current) {
+      observer.observe(chartRef.current)
+    }
+
+    return () => {
+      observer.disconnect()
+    }
+  })
+
+  
   
   let data
 
@@ -210,16 +241,18 @@ const Chart = async ({type, title, filename, source, columns, rowStart, rowEnd, 
 
   const dataToPass = {data: filteredData}
 
-  return <div className={children ? 'mb-12' : 'mb-3'}>
-    <div className={`${children ? 'mb-6' : ''} 'duration-100 rounded bg-white bg-opacity-90 dark:bg-gray-200 dark:bg-opacity-90'`}>
-      <div className="px-1 py-2 md:px-3 md:py-6">
-        {renderComponent({...dataToPass, type, title, xTitle, xMin, xMax, xPrefix, xSuffix, primaryYTitle, primaryYMin, primaryYMax, primaryYPrefix, primaryYSuffix, secondaryYTitle, secondaryYMin, secondaryYMax, secondaryYPrefix, secondaryYSuffix, baseOptions, userOptions, colors})}
-      </div>
+  return (
+    <div className={children ? 'mb-12' : 'mb-3'}>
+      {isVisible && (
+        <div className={`${children ? 'mb-6' : ''} 'duration-100 rounded bg-white bg-opacity-90 dark:bg-gray-200 dark:bg-opacity-90'`}>
+          <div className="px-1 py-2 md:px-3 md:py-6">
+            {renderComponent({...dataToPass, type, title, xTitle, xMin, xMax, xPrefix, xSuffix, primaryYTitle, primaryYMin, primaryYMax, primaryYPrefix, primaryYSuffix, secondaryYTitle, secondaryYMin, secondaryYMax, secondaryYPrefix, secondaryYSuffix, baseOptions, userOptions, colors})}
+          </div>
+        </div>
+      )}
+      <div className="text-sm leading-6">{children}</div>
     </div>
-    <div className="text-sm leading-6">{children}</div>
-  </div>
-
+  )
 }
-
 
 export default Chart
