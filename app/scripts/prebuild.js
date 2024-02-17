@@ -445,7 +445,7 @@ const createDummyComponents = async () => {
       dummyComponentNames.push(tagName)
       fs.writeFileSync(
         `app/_components/UserComponents/${tagName}.tsx`,
-        `\nconst ${tagName} = () => {return <></>}\n\nexport { ${tagName }}`
+        `\nconst ${tagName} = () => {return <></>}\n\nexport default ${tagName }`
       )
     }
   })
