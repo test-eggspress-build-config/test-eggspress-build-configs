@@ -594,6 +594,7 @@ const importUserComponents = async () => {
 const loadUserComponents = async () => {
   await createDummyComponents()
   await importUserComponents()
+  consoleLogFiles('app/_components/UserComponents.tsx')
 }
 
 
